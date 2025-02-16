@@ -3,9 +3,14 @@ import { z } from "zod";
 
 
 const schema = z.object({
-	DISCORD_APP_ID: z.string().min(19), // 数値型だが、Number.MAX_SAFE_INTEGERより大きいため、変換すると値に誤差が出る
+	// DiscordのIDは数値型だが文字列として扱っている
+	// Number.MAX_SAFE_INTEGERより大きいため、変換すると値に誤差が出るため、値が変化してしまう
+	DISCORD_APP_ID: z.string().min(18),
+	DISCORD_GUILD_ID: z.string().min(18),
+
 	DISCORD_TOKEN: z.string().min(1),
 	DISCORD_PUBLIC_KEY: z.string().min(1),
+
 });
 
 export type Schema = z.infer<typeof schema>;

@@ -1,33 +1,30 @@
-import { REST, Routes } from 'discord.js';
+import { Message, REST, Routes } from 'discord.js';
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { parseConfig } from './env.js';
 
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { RegisterCommands } from './deploy-command.js';
 
 const config = parseConfig()
 
-const commands = [
-	{
-		name: 'ping',
-		description: 'Replies with Pong!',
-	},
-];
-
-
 const rest = new REST({ version: '10' }).setToken(config.DISCORD_TOKEN);
 
+const commands = await RegisterCommands()
 
+console.log(commands)
 try {
-	console.log('Started refreshing application (/) commands.');
+	console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
-	console.log(config.DISCORD_APP_ID.toString())
-	await rest.put(Routes.applicationCommands(config.DISCORD_APP_ID.toString()), { body: commands });
+	await rest.put(Routes.applicationCommands(config.DISCORD_APP_ID), { body: commands });
 
-	console.log('Successfully reloaded application (/) commands.');
+	console.log('Successfully reloaded application commands.');
 } catch (error) {
 	console.error(error);
 }
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
+
 
 client.on(Events.ClientReady, readyClient => {
 	console.log(`Logged in as ${readyClient.user.tag}!`);
@@ -35,11 +32,23 @@ client.on(Events.ClientReady, readyClient => {
 
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
+	const command = interaction.client.commands.get(interaction.commandName);
 
-	if (interaction.commandName === 'ping') {
-		await interaction.reply('Pong!');
+	if (!command) {
+		console.error(`No command matching ${interaction.commandName} was found.`);
+		return;
 	}
-})
 
-client.login(config.DISCORD_TOKEN);
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		if (interaction.replied || interaction.deferred) {
+			await interaction.followUp({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral });
+		} else {
+			await interaction.reply({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral });
+		}
+	}
+});
 
+client.login(config.DISCORD_TOKEN)
