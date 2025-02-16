@@ -1,9 +1,6 @@
-import { CommandInteraction, SlashCommandBuilder } from "discord.js";
+import { RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord-api-types/v10";
 
-export const data = new SlashCommandBuilder()
-	.setName("ping")
-	.setDescription("Replies with Pong!")
-
-export const execute = async (interaction: CommandInteraction) => {
-	await interaction.reply({ content: "Pong!", ephemeral: true });
-}
+export const data: RESTPostAPIChatInputApplicationCommandsJSONBody = {
+	name: "ping",
+	description: "Replies with Pong!!!!",
+};

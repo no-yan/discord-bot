@@ -1,22 +1,27 @@
 {
-  "name": "discord-bot",
-  "version": "1.0.0",
-  "description": "",
-  "type": "module",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pnpm tsc && node --env-file=.env dist/index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "discord.js": "^14.18.0",
-    "zod": "^3.24.2"
-  },
-  "devDependencies": {
-    "oxlint": "^0.15.11",
-    "typescript": "^5.7.3"
-  }
+	"name": "discord-bot",
+	"version": "1.0.0",
+	"description": "",
+	"type": "module",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "pnpm tsc && node --env-file=.env dist/index.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@hono/node-server": "^1.13.8",
+		"discord-interactions": "^4.1.1",
+		"hono": "^4.7.1",
+		"zod": "^3.24.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@types/node": "^22.13.4",
+		"discord-api-types": "^0.37.119",
+		"oxlint": "^0.15.11",
+		"typescript": "^5.7.3"
+	}
 }

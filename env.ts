@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-
-
 const schema = z.object({
 	// DiscordのIDは数値型だが文字列として扱っている
 	// Number.MAX_SAFE_INTEGERより大きいため、変換すると値に誤差が出るため、値が変化してしまう
@@ -10,11 +8,10 @@ const schema = z.object({
 
 	DISCORD_TOKEN: z.string().min(1),
 	DISCORD_PUBLIC_KEY: z.string().min(1),
-
 });
 
 export type Schema = z.infer<typeof schema>;
-export type Config = z.infer<typeof schema>
+export type Config = z.infer<typeof schema>;
 
 export function parseConfig(): Config {
 	const config = schema.safeParse(process.env);
@@ -25,5 +22,5 @@ export function parseConfig(): Config {
 		process.exit(1);
 	}
 
-	return config.data
+	return config.data;
 }

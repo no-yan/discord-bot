@@ -1,54 +1,70 @@
-import { Message, REST, Routes } from 'discord.js';
-import { Client, Events, GatewayIntentBits } from 'discord.js';
-import { parseConfig } from './env.js';
+import {
+	type APIInteractionResponse,
+	ApplicationCommandType,
+	InteractionResponseType,
+	InteractionType,
+} from "discord-api-types/v10";
+import { Hono } from "hono";
+import { parseConfig } from "./env.js";
 
-import * as fs from "node:fs";
-import * as path from "node:path";
-import { RegisterCommands } from './deploy-command.js';
+import { serve } from "@hono/node-server";
+import { logger } from "hono/logger";
+import { verifyKeyMiddleware } from "./verify.js";
+import { RegisterCommands } from "./deploy-command.js";
 
-const config = parseConfig()
+const config = parseConfig();
+await RegisterCommands();
 
-const rest = new REST({ version: '10' }).setToken(config.DISCORD_TOKEN);
+const app = new Hono<{ Bindings: typeof config }>();
 
-const commands = await RegisterCommands()
+app.use(logger(), verifyKeyMiddleware(config.DISCORD_PUBLIC_KEY));
+app.use("*", async (c, next) => {
+	c.env = { ...c.env, ...config };
 
-console.log(commands)
-try {
-	console.log(`Started refreshing ${commands.length} application (/) commands.`);
-
-	await rest.put(Routes.applicationCommands(config.DISCORD_APP_ID), { body: commands });
-
-	console.log('Successfully reloaded application commands.');
-} catch (error) {
-	console.error(error);
-}
-
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
-
-
-client.on(Events.ClientReady, readyClient => {
-	console.log(`Logged in as ${readyClient.user.tag}!`);
+	await next();
 });
 
-client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isChatInputCommand()) return;
-	const command = interaction.client.commands.get(interaction.commandName);
-
-	if (!command) {
-		console.error(`No command matching ${interaction.commandName} was found.`);
-		return;
+app.post("/", async (c) => {
+	const body = JSON.parse(await c.req.text());
+	if (body.type === InteractionType.Ping) {
+		console.log("pong");
+		return c.json({ type: InteractionResponseType.Pong });
 	}
 
-	try {
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-		if (interaction.replied || interaction.deferred) {
-			await interaction.followUp({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral });
-		} else {
-			await interaction.reply({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral });
+	if (!body) {
+		return c.text("Bad request signature.", 401);
+	}
+	if (
+		body.type === InteractionType.ApplicationCommand &&
+		body.data.type === ApplicationCommandType.ChatInput
+	) {
+		// switch (interaction.data.name.toLowerCase()) {
+		try {
+			console.log("chat");
+			return c.json<APIInteractionResponse>({
+				type: InteractionResponseType.ChannelMessageWithSource,
+				data: {
+					content: "hi",
+				},
+			});
+		} catch (e) {
+			console.error(e);
+			return c.json<APIInteractionResponse>({
+				type: InteractionResponseType.ChannelMessageWithSource,
+				data: {
+					content: `キロロはお休み中キロＺｚｚ...\n${e}`,
+				},
+			});
 		}
+		// return c.json({ error: 'Unknown Type' }, 400);
 	}
+
+	console.log(body);
+	return c.json({ error: "Unknown Type" }, 400);
 });
 
-client.login(config.DISCORD_TOKEN)
+serve(app, (info) => {
+	console.log(`Listening on http://localhost:${info.port}`);
+});
+
+export default app;
