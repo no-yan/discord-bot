@@ -30,7 +30,7 @@ app.use("*", async (c, next) => {
 	await next();
 });
 
-app.post("/", async (c) => {
+app.post("/interactions", async (c) => {
 	const body: APIInteraction = JSON.parse(await c.req.text());
 	if (!body) {
 		return c.text("Bad request", 401);
