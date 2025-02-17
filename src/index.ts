@@ -1,6 +1,5 @@
 import {
 	type APIInteraction,
-	type APIInteractionResponse,
 	ApplicationCommandType,
 	InteractionResponseType,
 	InteractionType,
@@ -8,16 +7,12 @@ import {
 import { Hono } from "hono";
 
 import { logger } from "hono/logger";
-import type { Env } from "./env.js";
+import { NewCommands } from "../command/index.js";
+import { Ping } from "../command/ping.js";
 import { verifyKeyMiddleware } from "./middleware.js";
 
-// const config = parseConfig();
-// const commands = await GetCommands();
-// const res = await Register(commands, config);
-// if (res.status !== 200) {
-// }
-//
-const app = new Hono<{ Bindings: Env }>();
+const app = new Hono<{ Bindings: CloudflareBindings }>();
+const commands = NewCommands(Ping);
 
 app.use(logger(), verifyKeyMiddleware());
 
@@ -39,34 +34,14 @@ app.post("/interactions", async (c) => {
 	}
 
 	const { name } = body.data;
-	switch (name.toLowerCase()) {
-		case "ping": {
-			return c.json<APIInteractionResponse>({
-				type: InteractionResponseType.ChannelMessageWithSource,
-				data: {
-					content: "Pong",
-				},
-			});
-		}
-		default: {
-			try {
-				return c.json<APIInteractionResponse>({
-					type: InteractionResponseType.ChannelMessageWithSource,
-					data: {
-						content: "hi",
-					},
-				});
-			} catch (e) {
-				console.error(e);
-				return c.json<APIInteractionResponse>({
-					type: InteractionResponseType.ChannelMessageWithSource,
-					data: {
-						content: `キロロはお休み中キロＺｚｚ...\n${e}`,
-					},
-				});
-			}
+
+	for (const cmd of commands) {
+		if (cmd.name === name.toLowerCase()) {
+			cmd.execute(c);
 		}
 	}
+
+	c.json({ error: "Unknown Command" }, 400);
 });
 
 export default app;
