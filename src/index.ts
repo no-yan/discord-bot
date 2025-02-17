@@ -6,29 +6,20 @@ import {
 	InteractionType,
 } from "discord-api-types/v10";
 import { Hono } from "hono";
-import { parseConfig } from "./env.js";
 
-import { exit } from "node:process";
-import { serve } from "@hono/node-server";
 import { logger } from "hono/logger";
-import { GetCommands, Register } from "./deploy-command.js";
+import type { Env } from "./env.js";
 import { verifyKeyMiddleware } from "./middleware.js";
 
-const config = parseConfig();
-const commands = await GetCommands();
-const res = await Register(commands, config);
-if (res.status !== 200) {
-	exit(1);
-}
+// const config = parseConfig();
+// const commands = await GetCommands();
+// const res = await Register(commands, config);
+// if (res.status !== 200) {
+// }
+//
+const app = new Hono<{ Bindings: Env }>();
 
-const app = new Hono<{ Bindings: typeof config }>();
-
-app.use(logger(), verifyKeyMiddleware(config.DISCORD_PUBLIC_KEY));
-app.use("*", async (c, next) => {
-	c.env = { ...c.env, ...config };
-
-	await next();
-});
+app.use(logger(), verifyKeyMiddleware());
 
 app.post("/interactions", async (c) => {
 	const body: APIInteraction = JSON.parse(await c.req.text());
@@ -76,10 +67,6 @@ app.post("/interactions", async (c) => {
 			}
 		}
 	}
-});
-
-serve(app, (info) => {
-	console.log(`Listening on http://localhost:${info.port}`);
 });
 
 export default app;

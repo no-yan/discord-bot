@@ -10,9 +10,9 @@ const schema = z.object({
 	DISCORD_PUBLIC_KEY: z.string().min(1),
 });
 
-export type Config = z.infer<typeof schema>;
+export type Env = z.infer<typeof schema>;
 
-export function parseConfig(): Config {
+export function ValidateEnv(): Env {
 	const config = schema.safeParse(process.env);
 
 	if (config.error) {

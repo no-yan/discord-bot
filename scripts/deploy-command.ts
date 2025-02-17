@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { exit } from "node:process";
-import type { Config } from "./env";
+import type { Env } from "../src/env.js";
 
 const dir = path.join(import.meta.dirname, "command");
 type Command = {
@@ -32,7 +32,7 @@ export const GetCommands = async (): Promise<Command[]> => {
 
 export async function Register(
 	commands: Command[],
-	config: Config,
+	config: Env,
 ): Promise<Response> {
 	const registerURL = `https://discord.com/api/v10/applications/${config.DISCORD_APP_ID}/guilds/${config.DISCORD_GUILD_ID}/commands`;
 	const response = await fetch(registerURL, {
