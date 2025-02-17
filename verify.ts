@@ -1,6 +1,6 @@
 import { verifyKey } from "discord-interactions";
 import type { MiddlewareHandler } from "hono";
-import { Config } from "./env";
+import type { Config } from "./env";
 
 export const verifyKeyMiddleware =
 	(publicKey: string): MiddlewareHandler<{ Bindings: Config }> =>

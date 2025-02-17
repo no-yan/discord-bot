@@ -9,13 +9,17 @@ import { parseConfig } from "./env.js";
 
 import { serve } from "@hono/node-server";
 import { logger } from "hono/logger";
+import { GetCommands, Register } from "./deploy-command.js";
 import { verifyKeyMiddleware } from "./verify.js";
-import { RegisterCommands } from "./deploy-command.js";
 
 const config = parseConfig();
-await RegisterCommands();
+const commands = await GetCommands();
+console.log(commands);
 
 const app = new Hono<{ Bindings: typeof config }>();
+
+const res = await Register(commands, config);
+console.log(res);
 
 app.use(logger(), verifyKeyMiddleware(config.DISCORD_PUBLIC_KEY));
 app.use("*", async (c, next) => {
