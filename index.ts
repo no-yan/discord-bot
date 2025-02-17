@@ -41,41 +41,41 @@ app.post("/", async (c) => {
 	}
 
 	if (
-		body.type === InteractionType.ApplicationCommand &&
-		body.data.type === ApplicationCommandType.ChatInput
+		body.type !== InteractionType.ApplicationCommand ||
+		body.data.type !== ApplicationCommandType.ChatInput
 	) {
-		const { name } = body.data;
-		switch (name.toLowerCase()) {
-			case "ping": {
+		return c.json({ error: "Unknown Type" }, 400);
+	}
+
+	const { name } = body.data;
+	switch (name.toLowerCase()) {
+		case "ping": {
+			return c.json<APIInteractionResponse>({
+				type: InteractionResponseType.ChannelMessageWithSource,
+				data: {
+					content: "Pong",
+				},
+			});
+		}
+		default: {
+			try {
 				return c.json<APIInteractionResponse>({
 					type: InteractionResponseType.ChannelMessageWithSource,
 					data: {
-						content: "Pong",
+						content: "hi",
+					},
+				});
+			} catch (e) {
+				console.error(e);
+				return c.json<APIInteractionResponse>({
+					type: InteractionResponseType.ChannelMessageWithSource,
+					data: {
+						content: `キロロはお休み中キロＺｚｚ...\n${e}`,
 					},
 				});
 			}
-			default: {
-				try {
-					return c.json<APIInteractionResponse>({
-						type: InteractionResponseType.ChannelMessageWithSource,
-						data: {
-							content: "hi",
-						},
-					});
-				} catch (e) {
-					console.error(e);
-					return c.json<APIInteractionResponse>({
-						type: InteractionResponseType.ChannelMessageWithSource,
-						data: {
-							content: `キロロはお休み中キロＺｚｚ...\n${e}`,
-						},
-					});
-				}
-			}
 		}
 	}
-
-	return c.json({ error: "Unknown Type" }, 400);
 });
 
 serve(app, (info) => {
