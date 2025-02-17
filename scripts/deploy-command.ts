@@ -1,5 +1,5 @@
-import { NewCommandDTO, NewCommands, Register } from "../command/index";
-import { Ping } from "../command/ping";
+import { NewCommandDTO, NewCommands, Register } from "../src/command";
+import { Ping } from "../src/command/ping";
 import { ValidateEnv } from "../src/env";
 
 const config = ValidateEnv();

@@ -1,5 +1,5 @@
 import type { Context } from "hono";
-import type { Env } from "../src/env.js";
+import type { Env } from "../env.js";
 
 export type Command = {
 	name: string;

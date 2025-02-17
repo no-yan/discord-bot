@@ -7,8 +7,8 @@ import {
 import { Hono } from "hono";
 
 import { logger } from "hono/logger";
-import { NewCommands } from "../command/index.js";
-import { Ping } from "../command/ping.js";
+import { NewCommands } from "./command/index.js";
+import { Ping } from "./command/ping.js";
 import { verifyKeyMiddleware } from "./middleware.js";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
@@ -44,4 +44,3 @@ app.post("/interactions", async (c) => {
 	return c.json({ error: "Unknown Command" }, 400);
 });
 
-export default app;
