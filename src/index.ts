@@ -44,3 +44,15 @@ app.post("/interactions", async (c) => {
 	return c.json({ error: "Unknown Command" }, 400);
 });
 
+const scheduled: ExportedHandlerScheduledHandler<CloudflareBindings> = async (
+	_event,
+	env,
+	ctx,
+) => {
+	ctx.waitUntil(cronTask(env));
+};
+
+export default {
+	...app,
+	scheduled,
+};
