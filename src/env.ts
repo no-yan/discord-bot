@@ -5,6 +5,7 @@ const schema = z.object({
 	// DiscordのIDは64bit整数のため、 Bigint型に変換して丸めが起こらないようにしている
 	DISCORD_APP_ID: z.coerce.bigint().min(1n),
 	DISCORD_GUILD_ID: z.coerce.bigint().min(1n),
+	DISCORD_CHANNEL_ID: z.coerce.bigint().min(1n),
 
 	DISCORD_TOKEN: z.string().min(1),
 	DISCORD_PUBLIC_KEY: z.string().min(1),
