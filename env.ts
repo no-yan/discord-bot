@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const schema = z.object({
 	// DiscordのIDは数値型だが文字列として扱っている
-	// Number.MAX_SAFE_INTEGERより大きいため、変換すると値に誤差が出るため、値が変化してしまう
+	// IDが数値としてNumber.MAX_SAFE_INTEGERより大きく、変換すると値に誤差が出るため、数値に変換するとIDが変わってしまうことがある
 	DISCORD_APP_ID: z.string().min(18),
 	DISCORD_GUILD_ID: z.string().min(18),
 
@@ -10,8 +10,8 @@ const schema = z.object({
 	DISCORD_PUBLIC_KEY: z.string().min(1),
 });
 
-export type Schema = z.infer<typeof schema>;
-export type Config = z.infer<typeof schema>;
+type Schema = z.infer<typeof schema>;
+export type Config = Schema;
 
 export function parseConfig(): Config {
 	const config = schema.safeParse(process.env);
