@@ -10,7 +10,7 @@ import { parseConfig } from "./env.js";
 import { serve } from "@hono/node-server";
 import { logger } from "hono/logger";
 import { GetCommands, Register } from "./deploy-command.js";
-import { verifyKeyMiddleware } from "./verify.js";
+import { verifyKeyMiddleware } from "./middleware.js";
 
 const config = parseConfig();
 const commands = await GetCommands();
