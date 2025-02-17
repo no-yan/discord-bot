@@ -37,11 +37,11 @@ app.post("/interactions", async (c) => {
 
 	for (const cmd of commands) {
 		if (cmd.name === name.toLowerCase()) {
-			cmd.execute(c);
+			return cmd.execute(c);
 		}
 	}
 
-	c.json({ error: "Unknown Command" }, 400);
+	return c.json({ error: "Unknown Command" }, 400);
 });
 
 export default app;
