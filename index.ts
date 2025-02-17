@@ -32,14 +32,14 @@ app.use("*", async (c, next) => {
 
 app.post("/", async (c) => {
 	const body: APIInteraction = JSON.parse(await c.req.text());
+	if (!body) {
+		return c.text("Bad request", 401);
+	}
+
 	if (body.type === InteractionType.Ping) {
-		console.log("pong");
 		return c.json({ type: InteractionResponseType.Pong });
 	}
 
-	if (!body) {
-		return c.text("Bad request signature.", 401);
-	}
 	if (
 		body.type === InteractionType.ApplicationCommand &&
 		body.data.type === ApplicationCommandType.ChatInput
@@ -75,7 +75,6 @@ app.post("/", async (c) => {
 		}
 	}
 
-	console.log(body);
 	return c.json({ error: "Unknown Type" }, 400);
 });
 
