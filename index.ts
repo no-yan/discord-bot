@@ -1,4 +1,5 @@
 import {
+	type APIInteraction,
 	type APIInteractionResponse,
 	ApplicationCommandType,
 	InteractionResponseType,
@@ -7,6 +8,7 @@ import {
 import { Hono } from "hono";
 import { parseConfig } from "./env.js";
 
+import { exit } from "node:process";
 import { serve } from "@hono/node-server";
 import { logger } from "hono/logger";
 import { GetCommands, Register } from "./deploy-command.js";
@@ -14,12 +16,12 @@ import { verifyKeyMiddleware } from "./middleware.js";
 
 const config = parseConfig();
 const commands = await GetCommands();
-console.log(commands);
+const res = await Register(commands, config);
+if (res.status !== 200) {
+	exit(1);
+}
 
 const app = new Hono<{ Bindings: typeof config }>();
-
-const res = await Register(commands, config);
-console.log(res);
 
 app.use(logger(), verifyKeyMiddleware(config.DISCORD_PUBLIC_KEY));
 app.use("*", async (c, next) => {
@@ -29,7 +31,7 @@ app.use("*", async (c, next) => {
 });
 
 app.post("/", async (c) => {
-	const body = JSON.parse(await c.req.text());
+	const body: APIInteraction = JSON.parse(await c.req.text());
 	if (body.type === InteractionType.Ping) {
 		console.log("pong");
 		return c.json({ type: InteractionResponseType.Pong });
@@ -42,25 +44,35 @@ app.post("/", async (c) => {
 		body.type === InteractionType.ApplicationCommand &&
 		body.data.type === ApplicationCommandType.ChatInput
 	) {
-		// switch (interaction.data.name.toLowerCase()) {
-		try {
-			console.log("chat");
-			return c.json<APIInteractionResponse>({
-				type: InteractionResponseType.ChannelMessageWithSource,
-				data: {
-					content: "hi",
-				},
-			});
-		} catch (e) {
-			console.error(e);
-			return c.json<APIInteractionResponse>({
-				type: InteractionResponseType.ChannelMessageWithSource,
-				data: {
-					content: `キロロはお休み中キロＺｚｚ...\n${e}`,
-				},
-			});
+		const { name } = body.data;
+		switch (name.toLowerCase()) {
+			case "ping": {
+				return c.json<APIInteractionResponse>({
+					type: InteractionResponseType.ChannelMessageWithSource,
+					data: {
+						content: "Pong",
+					},
+				});
+			}
+			default: {
+				try {
+					return c.json<APIInteractionResponse>({
+						type: InteractionResponseType.ChannelMessageWithSource,
+						data: {
+							content: "hi",
+						},
+					});
+				} catch (e) {
+					console.error(e);
+					return c.json<APIInteractionResponse>({
+						type: InteractionResponseType.ChannelMessageWithSource,
+						data: {
+							content: `キロロはお休み中キロＺｚｚ...\n${e}`,
+						},
+					});
+				}
+			}
 		}
-		// return c.json({ error: 'Unknown Type' }, 400);
 	}
 
 	console.log(body);
