@@ -20,6 +20,8 @@
 		"crons": ["*/5 * * * *"]
 	},
 	"kv_namespaces": [
+		// KVのネームスペースとIDは公開してもセキュリティ上問題ない
+		// https://community.cloudflare.com/t/is-it-safe-to-keep-kv-ids-in-a-public-git-repo/517387
 		{
 			"binding": "kv",
 			"id": "766f78d1273345c682af2f3089d95ac0",
