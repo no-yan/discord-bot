@@ -134,3 +134,5 @@ dist
 wrangler.toml
 wrangler.jsonc
 worker-configuration.d.ts
+
+.dev.vars*
