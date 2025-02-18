@@ -3,11 +3,16 @@ import { z } from "zod";
 const schema = z.object({
 	// JavaScriptのNumber型は、2^53-1を超える整数に対して正確な値を保持できない
 	// DiscordのIDは64bit整数のため、 Bigint型に変換して丸めが起こらないようにしている
+	// biome-ignore lint/style/useNamingConvention:
 	DISCORD_APP_ID: z.coerce.bigint().min(1n),
+	// biome-ignore lint/style/useNamingConvention:
 	DISCORD_GUILD_ID: z.coerce.bigint().min(1n),
+	// biome-ignore lint/style/useNamingConvention:
 	DISCORD_CHANNEL_ID: z.coerce.bigint().min(1n),
 
+	// biome-ignore lint/style/useNamingConvention:
 	DISCORD_TOKEN: z.string().min(1),
+	// biome-ignore lint/style/useNamingConvention:
 	DISCORD_PUBLIC_KEY: z.string().min(1),
 });
 

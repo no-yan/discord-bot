@@ -13,6 +13,7 @@ const cronTask = async (env: CloudflareBindings) => {
 		headers: {
 			"User-Agent": `DiscordBot (${url}, 10)`,
 			"Content-Type": "application/json",
+			// biome-ignore lint/style:
 			Authorization: `Bot ${env.DISCORD_TOKEN}`,
 		},
 		body: JSON.stringify({

@@ -18,22 +18,23 @@ declare const brandSymbol: unique symbol;
 type Brand<T, B> = T & { [brandSymbol]: B };
 const brand = <T, B>(value: T): Brand<T, B> => value as Brand<T, B>;
 
-type CommandDTO = Brand<{ name: string; description: string }, "command">;
+type CommandDto = Brand<{ name: string; description: string }, "command">;
 
-export const NewCommandDTO = (command: Command): CommandDTO =>
+export const NewCommandDto = (command: Command): CommandDto =>
 	brand({
 		name: command.name,
 		description: command.description,
 	});
 
 export async function Register(
-	commands: CommandDTO[],
+	commands: CommandDto[],
 	config: Env,
 ): Promise<Response> {
-	const registerURL = `https://discord.com/api/v10/applications/${config.DISCORD_APP_ID}/guilds/${config.DISCORD_GUILD_ID}/commands`;
-	const response = await fetch(registerURL, {
+	const registerUrl = `https://discord.com/api/v10/applications/${config.DISCORD_APP_ID}/guilds/${config.DISCORD_GUILD_ID}/commands`;
+	const response = await fetch(registerUrl, {
 		headers: {
 			"Content-Type": "application/json",
+			// biome-ignore lint/style:
 			Authorization: `Bot ${config.DISCORD_TOKEN}`,
 		},
 		method: "PUT",
