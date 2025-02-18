@@ -1,5 +1,4 @@
 import type { Context } from "hono";
-import type { Env } from "../env.js";
 
 export type Command = {
 	name: string;
@@ -28,7 +27,7 @@ export const NewCommandDto = (command: Command): CommandDto =>
 
 export async function Register(
 	commands: CommandDto[],
-	config: Env,
+	config: CloudflareBindings,
 ): Promise<Response> {
 	const registerUrl = `https://discord.com/api/v10/applications/${config.DISCORD_APP_ID}/guilds/${config.DISCORD_GUILD_ID}/commands`;
 	const response = await fetch(registerUrl, {
