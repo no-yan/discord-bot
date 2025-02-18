@@ -1,5 +1,5 @@
 const BASE_URL = "https://discord.com";
-const cronTask = async (env: CloudflareBindings) => {
+export const cronTask = async (env: CloudflareBindings) => {
 	console.log("Cron job started at:", new Date().toISOString());
 
 	const url = new URL(
@@ -28,7 +28,7 @@ const cronTask = async (env: CloudflareBindings) => {
 		}),
 	});
 
-	console.log("Cron job finished at:", new Date().toISOString());
 	console.log(res);
 	console.log(await res.text());
+	console.log("Cron job finished at:", new Date().toISOString());
 };
