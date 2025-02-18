@@ -2,15 +2,24 @@ const BASE_URL = "https://discord.com";
 
 type Embed = { title: string; description: string };
 
-type AtLeastOne<T, K extends keyof T = keyof T> = K extends any
-	? Pick<T, K> & Partial<Omit<T, K>>
-	: never;
+type AtLeastOneOf<T, K extends keyof T> = {
+	[P in K]: Partial<T> & { [_P in P]: T[_P] };
+}[K];
 
+// 必ずcontent, embeds, sticker_ids, components, files, pollのいずれか1つが含まれている必要がある
 // See docs: https://discord.com/developers/docs/resources/message#create-message-jsonform-params
-export type Message = AtLeastOne<{
-	content: string;
-	embeds: Embed[];
-}>;
+export type Message = AtLeastOneOf<
+	{
+		content: string;
+		embeds: Embed[];
+		// biome-ignore lint/style/useNamingConvention: <explanation>
+		sticker_ids: string;
+		components: unknown[];
+		files: unknown;
+		poll: unknown;
+	},
+	"content" | "embeds" | "sticker_ids" | "components" | "files" | "poll"
+>;
 
 const defaultMessage = {
 	content: "Hello, World!",
