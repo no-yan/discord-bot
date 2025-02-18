@@ -7,7 +7,7 @@
 	"scripts": {
 		"build": "tsc",
 		"dev": "wrangler dev",
-		"predeploy": "tsx --env-file=.env scripts/deploy-command.ts",
+		"register": "tsx --env-file=.env scripts/deploy-command.ts",
 		"deploy": "wrangler deploy --minify",
 		"cf-typegen": "wrangler types --experimental-include-runtime=\"./runtime.d.ts\" --env-interface CloudflareBindings"
 	},
