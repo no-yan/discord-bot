@@ -12,7 +12,7 @@ export const cronTask = async (env: CloudflareBindings) => {
 		);
 	}
 
-	const content = `Here's today's reflection link\n${url}`;
+	const content = `Here's today's reflection link:\n${url}`;
 	const message: Message = {
 		content,
 	};
