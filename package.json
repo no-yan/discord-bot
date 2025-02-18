@@ -5,6 +5,7 @@
 	"type": "module",
 	"main": "src/index.js",
 	"scripts": {
+		"build": "tsc",
 		"dev": "wrangler dev",
 		"predeploy": "tsx --env-file=.env scripts/deploy-command.ts",
 		"deploy": "wrangler deploy --minify",
