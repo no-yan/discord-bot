@@ -5,7 +5,6 @@
 	"type": "module",
 	"main": "src/index.js",
 	"scripts": {
-		"prebuild": "pnpm cf-typegen",
 		"build": "tsc",
 		"dev": "wrangler dev",
 		"predeploy": "tsx --env-file=.env scripts/deploy-command.ts",

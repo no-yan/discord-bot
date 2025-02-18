@@ -131,6 +131,4 @@ dist
 .pnp.*
 
 # Cloudflare
-worker-configuration.d.ts
-
 .dev.vars*
