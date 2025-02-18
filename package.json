@@ -8,8 +8,7 @@
 		"dev": "wrangler dev",
 		"predeploy": "tsx --env-file=.env scripts/deploy-command.ts",
 		"deploy": "wrangler deploy --minify",
-		"cf-typegen": "wrangler types --experimental-include-runtime=\"./runtime.d.ts\" --env-interface CloudflareBindings",
-		"register": "node --experimental-strip-types --env-file=.env scripts/deploy-command.ts"
+		"cf-typegen": "wrangler types --experimental-include-runtime=\"./runtime.d.ts\" --env-interface CloudflareBindings"
 	},
 	"keywords": [],
 	"author": "",
@@ -26,5 +25,6 @@
 		"tsx": "^4.19.2",
 		"typescript": "^5.7.3",
 		"wrangler": "^3.109.1"
-	}
+	},
+	"packageManager": "pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af"
 }
