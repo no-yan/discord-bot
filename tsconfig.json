@@ -15,7 +15,8 @@
 		"isolatedModules": true,
 		"jsx": "preserve",
 		"incremental": true,
-		"outDir": "dist"
+		"outDir": "dist",
+		"noImplicitAny": true
 	},
 	"include": ["**/*.ts", "**/*.tsx", "env.ts"],
 	"exclude": ["node_modules", "scripts/**"]
