@@ -13,7 +13,6 @@ import { Ping } from "./command/ping.js";
 import { cronTask } from "./crontrigger/index.js";
 import { verifyKeyMiddleware } from "./middleware.js";
 
-// biome-ignore lint/style: Binding is type, so it's ok to use Pascal
 const app = new Hono<{ Bindings: CloudflareBindings }>();
 const commands = NewCommands(Ping);
 

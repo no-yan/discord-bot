@@ -12,7 +12,6 @@ export type Message = AtLeastOneOf<
 	{
 		content: string;
 		embeds: Embed[];
-		// biome-ignore lint/style/useNamingConvention: <explanation>
 		sticker_ids: string;
 		components: unknown[];
 		files: unknown;
@@ -43,7 +42,6 @@ export const SendMessageToChannel = async (
 		headers: {
 			"User-Agent": `DiscordBot (${url}, 10)`,
 			"Content-Type": "application/json",
-			// biome-ignore lint/style:
 			Authorization: `Bot ${discordToken}`,
 		},
 		body: JSON.stringify(message),

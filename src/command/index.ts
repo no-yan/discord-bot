@@ -33,7 +33,6 @@ export async function Register(
 	const response = await fetch(registerUrl, {
 		headers: {
 			"Content-Type": "application/json",
-			// biome-ignore lint/style:
 			Authorization: `Bot ${config.DISCORD_TOKEN}`,
 		},
 		method: "PUT",

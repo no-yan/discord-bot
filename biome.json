@@ -7,7 +7,10 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["dist", "*.d.ts"]
+		"ignore": [
+			"dist",
+			"*.d.ts"
+		]
 	},
 	"formatter": {
 		"enabled": true,
@@ -21,7 +24,38 @@
 		"rules": {
 			"recommended": true,
 			"style": {
-				"useNamingConvention": "error"
+				"useNamingConvention": {
+					"level": "error",
+					"options": {
+						"strictCase": false,
+						"conventions": [
+							{
+								"selector": {
+									"kind": "objectLiteralProperty",
+									"scope": "any"
+								},
+								"formats": [
+									"camelCase",
+									"PascalCase",
+									"snake_case",
+									"CONSTANT_CASE"
+								]
+							},
+							{
+								"selector": {
+									"kind": "typeProperty",
+									"scope": "any"
+								},
+								"formats": [
+									"camelCase",
+									"PascalCase",
+									"snake_case",
+									"CONSTANT_CASE"
+								]
+							}
+						]
+					}
+				}
 			},
 			"suspicious": {
 				"noExplicitAny": "off"

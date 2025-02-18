@@ -3,7 +3,6 @@ import { env } from "hono/adapter";
 import { createMiddleware } from "hono/factory";
 
 export const verifyKeyMiddleware = createMiddleware<{
-	// biome-ignore lint/style/useNamingConvention: <explanation>
 	Bindings: CloudflareBindings;
 }>(async (c, next) => {
 	const { DISCORD_PUBLIC_KEY } = env(c);
