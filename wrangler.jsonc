@@ -18,7 +18,13 @@
 	},
 	"triggers": {
 		"crons": ["30 12 * * *", "45 * * * *"]
-	}
+	},
+	"kv_namespaces": [
+		{
+			"binding": "kv",
+			"id": "766f78d1273345c682af2f3089d95ac0"
+		}
+	]
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement

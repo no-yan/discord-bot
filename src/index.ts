@@ -6,6 +6,7 @@ import {
 } from "discord-api-types/v10";
 import { Hono } from "hono";
 
+import { env } from "hono/adapter";
 import { logger } from "hono/logger";
 import { NewCommands } from "./command/index.js";
 import { Ping } from "./command/ping.js";
@@ -16,7 +17,8 @@ import { verifyKeyMiddleware } from "./middleware.js";
 const app = new Hono<{ Bindings: CloudflareBindings }>();
 const commands = NewCommands(Ping);
 
-app.use(logger(), verifyKeyMiddleware());
+app.use(logger());
+app.use("/interactions", verifyKeyMiddleware());
 
 app.post("/interactions", async (c) => {
 	const body: APIInteraction = JSON.parse(await c.req.text());
@@ -46,12 +48,26 @@ app.post("/interactions", async (c) => {
 	return c.json({ error: "Unknown Command" }, 400);
 });
 
+app.get("/kv", async (c) => {
+	const { kv } = env(c);
+	const page = await kv.get("index.html");
+
+	if (page == null) {
+		return c.html("", 404);
+	}
+	return c.html(page);
+});
+
 const scheduled: ExportedHandlerScheduledHandler<CloudflareBindings> = async (
-	_event,
+	event,
 	env,
 	ctx,
 ) => {
-	ctx.waitUntil(cronTask(env));
+	switch (event.cron) {
+		default: {
+			ctx.waitUntil(cronTask(env));
+		}
+	}
 };
 
 export default {
