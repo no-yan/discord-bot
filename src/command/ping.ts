@@ -14,7 +14,7 @@ const handler: CommandHandler = (c: Context) => {
 	});
 };
 
-export const ping: Command = {
+export const Ping: Command = {
 	name: "ping",
 	description: "Replies with Pong!!!!",
 	execute: handler,
