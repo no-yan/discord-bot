@@ -18,7 +18,7 @@ const app = new Hono<{ Bindings: CloudflareBindings }>();
 const commands = NewCommands(Ping);
 
 app.use(logger());
-app.use("/interactions", verifyKeyMiddleware());
+app.use("/interactions", verifyKeyMiddleware);
 
 app.post("/interactions", async (c) => {
 	const body: APIInteraction = JSON.parse(await c.req.text());
