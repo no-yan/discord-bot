@@ -17,12 +17,13 @@
 		"dev": {}
 	},
 	"triggers": {
-		"crons": ["30 12 * * *", "45 * * * *"]
+		"crons": ["*/5 * * * *"]
 	},
 	"kv_namespaces": [
 		{
 			"binding": "kv",
-			"id": "766f78d1273345c682af2f3089d95ac0"
+			"id": "766f78d1273345c682af2f3089d95ac0",
+			"preview_id": "91a4fccb92af4d5a8d79e082510593ac"
 		}
 	]
 	/**
