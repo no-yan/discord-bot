@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { validateSchema } from "../api/validator";
+import { ZodError, z } from "zod";
+import { ValidationError, validateSchema } from "../api/validator";
 
 export type Task = any;
 export type Tasks = Task[];
@@ -17,12 +17,12 @@ export const FetchTodayTasks = async (
 			equals: today,
 		},
 	};
+
 	try {
 		const res = await fetchDbWithCompoundFilter(dbId, token, filter);
-		console.log(res);
 
 		const tasks: Tasks = res.results.map((page) => {
-			const title = page.properties.Name.title;
+			const title = page.properties.名前.title[0].plain_text;
 
 			return {
 				id: page.id,
@@ -31,33 +31,81 @@ export const FetchTodayTasks = async (
 		});
 
 		return tasks;
-	} catch (e) {
-		console.log(e);
+	} catch (err) {
+		if (err instanceof ValidationError) {
+			if (err.cause instanceof ZodError) {
+				for (const { code, path, message } of err.cause.issues) {
+					console.error({
+						code,
+						path,
+						message,
+					});
+				}
+			}
+			console.error("Validation Error:", {
+				message: err.message,
+			});
+		}
+
+		console.warn(err);
 		return [];
 	}
 };
 
 const taskSchema = z.object({
-	ステータス: z.string(),
-	プロジェクト: z.string(),
-	実施予定日: z.string(),
-	"Parent item": z.string(),
-	"Sub-item": z.string(),
-	タスク種別: z.string(),
-	気持ち: z.string(),
-	予定時間: z.string(),
-	開始時刻: z.string(),
-	終了時間: z.string(),
-	開始: z.string(),
-	終了: z.string(),
-	Name: z.object({
+	ステータス: z.object({
 		id: z.string(),
-		type: z.string(),
-		title: z.object({
-			type: z.string(),
-			text: z.string(),
-			plain_text: z.string(),
+		type: z.literal("status"),
+		status: z.object({
+			name: z.string(),
 		}),
+	}),
+	終了時間: z.any().optional(),
+	開始: z.any().optional(),
+	予定時間: z
+		.object({
+			id: z.string(),
+			type: z.literal("formula"),
+			formula: z.any(),
+		})
+		.nullable(),
+	タスク種別: z.any(),
+	"Parent item": z.any(),
+	開始時刻: z.any(),
+	終了: z.any(),
+	実施予定日: z
+		.object({
+			id: z.string(),
+			type: z.literal("date"),
+			date: z
+				.object({
+					start: z.string().nullable(),
+					end: z.string().nullable(),
+					time_zone: z.string().nullable(),
+				})
+				.partial(),
+		})
+		.optional(),
+
+	気持ち: z.any(),
+	"Sub-item": z.any(),
+
+	名前: z.object({
+		id: z.string(),
+		type: z.literal("title"),
+		title: z.array(
+			z.object({
+				type: z.string(),
+				text: z
+					.object({
+						content: z.string(),
+						link: z.string().nullable(),
+					})
+					.nullable(),
+				plain_text: z.string(),
+				href: z.string().nullable().optional(),
+			}),
+		),
 	}),
 });
 
@@ -65,7 +113,7 @@ const schema = z.object({
 	object: z.literal("list"),
 	results: z.array(
 		z.object({
-			id: z.string().uuid(),
+			id: z.string(),
 			properties: taskSchema,
 		}),
 	),
