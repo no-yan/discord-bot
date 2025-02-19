@@ -7,4 +7,6 @@ interface CloudflareBindings {
 	DISCORD_CHANNEL_ID: string;
 	DISCORD_TOKEN: string;
 	DISCORD_PUBLIC_KEY: string;
+	NOTION_DB_ID: string;
+	NOTION_TOKEN: string;
 }
