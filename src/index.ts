@@ -10,7 +10,10 @@ import { env } from "hono/adapter";
 import { logger } from "hono/logger";
 import { NewCommands } from "./command/index.js";
 import { Ping } from "./command/ping.js";
-import { cronTask } from "./crontrigger/index.js";
+import {
+	cronTask,
+	cronTaskNotiono as cronTaskNotion,
+} from "./crontrigger/index.js";
 import { verifyKeyMiddleware } from "./middleware.js";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
@@ -62,9 +65,16 @@ const scheduled: ExportedHandlerScheduledHandler<CloudflareBindings> = async (
 	env,
 	ctx,
 ) => {
+	console.log(event.cron);
 	switch (event.cron) {
+		case "0 12 * * *": {
+			return ctx.waitUntil(cronTask(env));
+		}
+		case "0 0 * * *": {
+			return ctx.waitUntil(cronTaskNotion(env));
+		}
 		default: {
-			ctx.waitUntil(cronTask(env));
+			return ctx.waitUntil(cronTask(env));
 		}
 	}
 };

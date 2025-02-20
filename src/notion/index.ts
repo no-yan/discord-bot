@@ -1,7 +1,10 @@
-import { ZodError, z } from "zod";
-import { ValidationError, validateSchema } from "../api/validator";
+import { z } from "zod";
+import { validateSchema } from "../api/validator";
 
-export type Task = any;
+export type Task = {
+	id: string;
+	title: string;
+};
 export type Tasks = Task[];
 
 const NOTION_VERSION = "2022-06-28";
@@ -18,38 +21,18 @@ export const FetchTodayTasks = async (
 		},
 	};
 
-	try {
-		const res = await fetchDbWithCompoundFilter(dbId, token, filter);
+	const res = await fetchDbWithCompoundFilter(dbId, token, filter);
 
-		const tasks: Tasks = res.results.map((page) => {
-			const title = page.properties.名前.title[0].plain_text;
+	const tasks: Tasks = res.results.map((page) => {
+		const title = page.properties.名前.title[0].plain_text;
 
-			return {
-				id: page.id,
-				title,
-			};
-		});
+		return {
+			id: page.id,
+			title,
+		};
+	});
 
-		return tasks;
-	} catch (err) {
-		if (err instanceof ValidationError) {
-			if (err.cause instanceof ZodError) {
-				for (const { code, path, message } of err.cause.issues) {
-					console.error({
-						code,
-						path,
-						message,
-					});
-				}
-			}
-			console.error("Validation Error:", {
-				message: err.message,
-			});
-		}
-
-		console.warn(err);
-		return [];
-	}
+	return tasks;
 };
 
 const taskSchema = z.object({
