@@ -132,3 +132,4 @@ dist
 
 # Cloudflare
 .dev.vars*
+.wrangler/
