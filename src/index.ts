@@ -70,7 +70,7 @@ const scheduled: ExportedHandlerScheduledHandler<CloudflareBindings> = async (
 		case "0 12 * * *": {
 			return ctx.waitUntil(cronTask(env));
 		}
-		case "0 0 * * *": {
+		case "0 0 */3 * *": {
 			return ctx.waitUntil(cronTaskNotion(env));
 		}
 		default: {
