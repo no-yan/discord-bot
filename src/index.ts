@@ -74,6 +74,7 @@ const scheduled: ExportedHandlerScheduledHandler<CloudflareBindings> = async (
 			return ctx.waitUntil(cronTaskNotion(env));
 		}
 		default: {
+			console.warn("unknown cron command", event.cron);
 			return ctx.waitUntil(cronTask(env));
 		}
 	}
