@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { validateSchema } from "../api";
 
+// Note: 実験的に型操作を多用する
 export type Task = {
-	id: string;
 	title: string;
 };
 export type Tasks = Task[];
@@ -19,15 +19,20 @@ export const FetchTodayTasks = async (
 		date: {
 			equals: today,
 		},
-	};
+	} as const;
+	const sort = {
+		sorts: {
+			property: "実施予定日",
+			direction: "ascending",
+		},
+	} as const;
 
-	const res = await fetchDbWithCompoundFilter(dbId, token, filter);
+	const res = await fetchDbWithCompoundFilter(dbId, token, { filter, sort });
 
 	const tasks: Tasks = res.results.map((page) => {
 		const title = page.properties.名前.title[0].plain_text;
 
 		return {
-			id: page.id,
 			title,
 		};
 	});
@@ -91,6 +96,8 @@ const taskSchema = z.object({
 		),
 	}),
 });
+type TaskType = z.infer<typeof taskSchema>;
+type Property = keyof TaskType;
 
 const schema = z.object({
 	object: z.literal("list"),
@@ -110,12 +117,61 @@ const validate = (dto: unknown): DBQueryResponse => {
 };
 
 // doc: https://developers.notion.com/reference/post-database-query#compound-filters
-type Filter = object; // TODO:
+type Filter = SingleFilter | ComplexFilter;
+type FilterKey =
+	| "checkbox"
+	| "date"
+	| "files"
+	| "formula"
+	| "multi_select"
+	| "number"
+	| "people"
+	| "phone_number"
+	| "relation"
+	| "rich_text"
+	| "select"
+	| "status"
+	| "timestamp"
+	| "ID";
 
+type SingleFilter = {
+	property: Property;
+} & {
+	[K in FilterKey]?: {
+		equals?: any;
+		does_not_equal?: boolean;
+	};
+};
+
+type ComplexFilter = {
+	and?: Filter;
+	or?: Filter;
+};
+
+// A sort is a condition used to order the entries returned from a database query.
+type Sort = {
+	sorts: SortObject;
+};
+
+type SortObject = PropertyValueSort | EntryTimestampSort;
+type PropertyValueSort = {
+	property: Property;
+	direction: "ascending" | "descending";
+};
+type EntryTimestampSort = {
+	timestamp: "created_time" | "last_edited_time";
+	direction: "ascending" | "descending";
+};
+
+type FetchOpt = {
+	sort?: Sort;
+	filter?: Filter;
+	page_size?: number;
+};
 const fetchDbWithCompoundFilter = async (
 	dbId: string,
 	token: string,
-	filter: Filter,
+	opt: FetchOpt,
 ): Promise<DBQueryResponse> => {
 	const url = `https://api.notion.com/v1/databases/${dbId}/query`;
 	const headers = {
@@ -128,9 +184,8 @@ const fetchDbWithCompoundFilter = async (
 		method: "POST",
 		headers,
 		body: JSON.stringify({
-			filter,
-			// sorts: [...] // 並び順を指定したい場合は sorts を指定
 			page_size: 50,
+			...opt,
 		}),
 	});
 
