@@ -1,9 +1,8 @@
 import { type Message, SendMessageToChannel } from "../discord";
 import { FetchTodayTasks } from "../notion";
-import { Logger } from "./logger";
 
 export const cronTask = async (env: CloudflareBindings) => {
-	using logger = new Logger();
+	console.log("Cron job started at:", new Date().toISOString());
 
 	const { kv } = env;
 	const url = await kv.get("OPENAI:CHAT:LOOKBACK");
@@ -24,13 +23,13 @@ export const cronTask = async (env: CloudflareBindings) => {
 		message,
 	);
 
-	if (!res.ok) {
-		logger.warn(await res.text());
-	}
+	console.log(res);
+	console.log(await res.text());
+	console.log("Cron job finished at:", new Date().toISOString());
 };
 
 export const cronTaskNotion = async (env: CloudflareBindings) => {
-	using logger = new Logger();
+	console.log("Cron job started at:", new Date().toISOString());
 
 	const { kv } = env;
 	const url = await kv.get("OPENAI:CHAT:LOOKBACK");
@@ -45,7 +44,7 @@ export const cronTaskNotion = async (env: CloudflareBindings) => {
 		(_) => [],
 	);
 
-	let content = "Here are your tasks for today\n";
+	let content = `Here's today's task link:\n`;
 	for (const task of tasks) {
 		content += `\n${task.title}`;
 	}
@@ -58,7 +57,7 @@ export const cronTaskNotion = async (env: CloudflareBindings) => {
 		message,
 	);
 
-	if (!res.ok) {
-		logger.warn(await res.text());
-	}
+	console.log(res);
+	console.log(await res.text());
+	console.log("Cron job finished at:", new Date().toISOString());
 };
