@@ -13,6 +13,8 @@ export const NewCommands = (...commands: Command[]): Commands => {
 	return [...commands];
 };
 
+export { Ping } from "./ping";
+
 declare const brandSymbol: unique symbol;
 type Brand<T, B> = T & { [brandSymbol]: B };
 const brand = <T, B>(value: T): Brand<T, B> => value as Brand<T, B>;

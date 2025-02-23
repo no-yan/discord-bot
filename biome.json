@@ -7,10 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": [
-			"dist",
-			"*.d.ts"
-		]
+		"ignore": ["dist", "*.d.ts"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -59,6 +56,9 @@
 			},
 			"suspicious": {
 				"noExplicitAny": "off"
+			},
+			"nursery": {
+				"useImportRestrictions": "error"
 			}
 		}
 	},

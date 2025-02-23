@@ -1,5 +1,5 @@
-import { NewCommandDto, NewCommands, Register } from "../src/command";
-import { Ping } from "../src/command/ping";
+// biome-ignore lint:
+import { NewCommandDto, NewCommands, Ping, Register } from "../src/command";
 import { ValidateEnv } from "./env";
 
 const config = ValidateEnv();

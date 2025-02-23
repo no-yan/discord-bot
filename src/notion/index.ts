@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { validateSchema } from "../api/validator";
+import { validateSchema } from "../api";
 
 export type Task = {
 	id: string;

@@ -8,8 +8,7 @@ import { Hono } from "hono";
 
 import { env } from "hono/adapter";
 import { logger } from "hono/logger";
-import { NewCommands } from "./command/index.js";
-import { Ping } from "./command/ping.js";
+import { NewCommands, Ping } from "./command";
 import { cronTask, cronTaskNotion } from "./crontrigger/index.js";
 import { verifyKeyMiddleware } from "./middleware.js";
 
