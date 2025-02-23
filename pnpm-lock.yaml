@@ -22,22 +22,22 @@ importers:
         specifier: 1.9.4
         version: 1.9.4
       discord-api-types:
-        specifier: ^0.37.119
+        specifier: 0.37.119
         version: 0.37.119
       lefthook:
-        specifier: ^1.11.0
+        specifier: 1.11.0
         version: 1.11.0
       oxlint:
-        specifier: ^0.15.11
+        specifier: 0.15.11
         version: 0.15.11
       tsx:
-        specifier: ^4.19.3
+        specifier: 4.19.3
         version: 4.19.3
       typescript:
-        specifier: ^5.7.3
+        specifier: 5.7.3
         version: 5.7.3
       wrangler:
-        specifier: ^3.109.2
+        specifier: 3.109.2
         version: 3.109.2
 
 packages:
