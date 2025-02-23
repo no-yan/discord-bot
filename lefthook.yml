@@ -1,0 +1,30 @@
+# EXAMPLE USAGE:
+#
+#   Refer for explanation to following link:
+#   https://lefthook.dev/configuration/
+#
+pre-push:
+  jobs:
+    - name: packages audit
+      tags:
+        - frontend
+        - security
+      run: yarn audit
+
+    - name: gems audit
+      tags:
+        - backend
+        - security
+      run: bundle audit
+
+pre-commit:
+  parallel: true
+  jobs:
+    - run: pnpm biome --check {staged_files}
+      glob: "*.{js,ts,jsx,tsx}"
+
+    - run: pnpm oxlint {staged_files}
+      glob: "*.{js,ts,jsx,tsx}"
+
+    - run: pnpm tsc
+      glob: "*.{js,ts,jsx,tsx}"
