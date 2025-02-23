@@ -1,5 +1,3 @@
-// @ts-expect-error
-Symbol.dispose ??= Symbol("Symbol.dispose");
 export class Logger implements Disposable {
 	constructor() {
 		console.log("Cron job started at:", new Date().toISOString());
