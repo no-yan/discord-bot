@@ -15,3 +15,6 @@ pre-commit:
 
     - run: pnpm tsc
       glob: "*.{js,ts,jsx,tsx}"
+
+    - run: pnpm biome format --fix {staged_files}
+      glob: "*.{json, jsonc}"
