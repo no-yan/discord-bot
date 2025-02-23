@@ -8,6 +8,7 @@
 		"build": "tsc",
 		"dev": "wrangler dev",
 		"lint": "oxlint . && biome check --fix",
+		"test": "echo noop",
 		"register": "tsx --env-file=.dev.vars scripts/deploy-command.ts",
 		"deploy": "wrangler deploy --minify",
 		"cf-typegen": "wrangler types --experimental-include-runtime=\"./runtime.d.ts\" --env-interface CloudflareBindings"
