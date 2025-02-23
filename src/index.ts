@@ -10,10 +10,7 @@ import { env } from "hono/adapter";
 import { logger } from "hono/logger";
 import { NewCommands } from "./command/index.js";
 import { Ping } from "./command/ping.js";
-import {
-	cronTask,
-	cronTaskNotiono as cronTaskNotion,
-} from "./crontrigger/index.js";
+import { cronTask, cronTaskNotion } from "./crontrigger/index.js";
 import { verifyKeyMiddleware } from "./middleware.js";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();

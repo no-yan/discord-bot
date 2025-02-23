@@ -28,7 +28,7 @@ export const cronTask = async (env: CloudflareBindings) => {
 	console.log("Cron job finished at:", new Date().toISOString());
 };
 
-export const cronTaskNotiono = async (env: CloudflareBindings) => {
+export const cronTaskNotion = async (env: CloudflareBindings) => {
 	console.log("Cron job started at:", new Date().toISOString());
 
 	const { kv } = env;
