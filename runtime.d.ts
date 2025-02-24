@@ -1,4 +1,4 @@
-// Runtime types generated with workerd@1.20250204.0 2025-02-14 
+// Runtime types generated with workerd@1.20250214.0 2025-02-14 
 /*! *****************************************************************************
 Copyright (c) Cloudflare. All rights reserved.
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -373,7 +373,7 @@ declare abstract class PromiseRejectionEvent extends Event {
 declare abstract class Navigator {
     sendBeacon(url: string, body?: (ReadableStream | string | (ArrayBuffer | ArrayBufferView) | Blob | FormData | URLSearchParams | URLSearchParams)): boolean;
     readonly userAgent: string;
-    readonly gpu: GPU;
+    readonly gpu?: GPU;
 }
 /**
 * The Workers runtime supports a subset of the Performance API, used to measure timing and performance,
@@ -2182,7 +2182,7 @@ declare class URLSearchParams {
     ]>;
 }
 declare class URLPattern {
-    constructor(input?: (string | URLPatternURLPatternInit), baseURL?: string, patternOptions?: URLPatternURLPatternOptions);
+    constructor(input?: (string | URLPatternURLPatternInit), baseURL?: (string | URLPatternURLPatternOptions), patternOptions?: URLPatternURLPatternOptions);
     get protocol(): string;
     get username(): string;
     get password(): string;
