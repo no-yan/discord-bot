@@ -41,7 +41,10 @@ export const cronTaskNotion = async (env: CloudflareBindings) => {
 	}
 
 	const tasks = await FetchTodayTasks(env.NOTION_DB_ID, env.NOTION_TOKEN).catch(
-		(_) => [],
+		(e: Error) => {
+			console.warn(e);
+			return [];
+		},
 	);
 
 	let content = `Here's today's task link:\n`;
@@ -60,4 +63,20 @@ export const cronTaskNotion = async (env: CloudflareBindings) => {
 	console.log(res);
 	console.log(await res.text());
 	console.log("Cron job finished at:", new Date().toISOString());
+};
+
+export const cronTaskInvalid = async (env: CloudflareBindings) => {
+	console.warn("specified invalid cron schedule");
+
+	const message = {
+		content: "Cron job failed due to invalid cron schedule",
+	};
+	const res = await SendMessageToChannel(
+		env.DISCORD_CHANNEL_ID,
+		env.DISCORD_TOKEN,
+		message,
+	);
+
+	console.log(res);
+	console.log(await res.text());
 };
