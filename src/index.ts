@@ -9,7 +9,11 @@ import { Hono } from "hono";
 import { env } from "hono/adapter";
 import { logger } from "hono/logger";
 import { NewCommands, Ping } from "./command";
-import { cronTask, cronTaskNotion } from "./crontrigger/index.js";
+import {
+	cronTask,
+	cronTaskInvalid,
+	cronTaskNotion,
+} from "./crontrigger/index.js";
 import { verifyKeyMiddleware } from "./middleware.js";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
@@ -66,12 +70,12 @@ const scheduled: ExportedHandlerScheduledHandler<CloudflareBindings> = async (
 		case "0 12 * * *": {
 			return ctx.waitUntil(cronTask(env));
 		}
-		case "0 0 */3 * *": {
+		case "0 0 * * *": {
 			return ctx.waitUntil(cronTaskNotion(env));
 		}
 		default: {
 			console.warn("unknown cron command", event.cron);
-			return ctx.waitUntil(cronTask(env));
+			return ctx.waitUntil(cronTaskInvalid(env));
 		}
 	}
 };
