@@ -20,14 +20,14 @@ export const FetchTodayTasks = async (
 			equals: today,
 		},
 	} as const;
-	const sort = {
-		sorts: {
+	const sorts = [
+		{
 			property: "実施予定日",
 			direction: "ascending",
 		},
-	} as const;
+	] as const;
 
-	const res = await fetchDbWithCompoundFilter(dbId, token, { filter, sort });
+	const res = await fetchDbWithCompoundFilter(dbId, token, { filter, sorts });
 
 	const tasks: Tasks = res.results.map((page) => {
 		const title = page.properties.名前.title[0].plain_text;
@@ -149,24 +149,22 @@ type ComplexFilter = {
 };
 
 // A sort is a condition used to order the entries returned from a database query.
-type Sort = {
-	sorts: SortObject;
-};
 
-type SortObject = PropertyValueSort | EntryTimestampSort;
+type SortOpt = PropertyValueSort | EntryTimestampSort;
+type SortOpts = readonly SortOpt[];
 type PropertyValueSort = {
-	property: Property;
-	direction: "ascending" | "descending";
+	readonly property: Property;
+	readonly direction: "ascending" | "descending";
 };
 type EntryTimestampSort = {
-	timestamp: "created_time" | "last_edited_time";
-	direction: "ascending" | "descending";
+	readonly timestamp: "created_time" | "last_edited_time";
+	readonly direction: "ascending" | "descending";
 };
 
 type FetchOpt = {
-	sort?: Sort;
-	filter?: Filter;
-	page_size?: number;
+	readonly sorts?: SortOpts;
+	readonly filter?: Filter;
+	readonly page_size?: number;
 };
 const fetchDbWithCompoundFilter = async (
 	dbId: string,
