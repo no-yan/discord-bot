@@ -25,7 +25,7 @@
 		"@biomejs/biome": "1.9.4",
 		"discord-api-types": "0.37.119",
 		"lefthook": "1.11.2",
-		"oxlint": "0.15.15",
+		"oxlint": "0.16.0",
 		"tsx": "4.19.3",
 		"typescript": "5.8.2",
 		"wrangler": "3.111.0"
